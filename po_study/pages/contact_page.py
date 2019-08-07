@@ -101,7 +101,10 @@ class ContactPage(BasePage):
 
     # 搜索
     def search(self, key):
-        self._driver.find_element(*self._search_input).send_keys(key)
+        search_input = self._driver.find_element(*self._search_input)
+        search_input.clear()
+        search_input.send_keys(key)
+    def go_to_search_page(self):
         return ProfilePage(self._driver)
 
     # 点击管理工具

@@ -1,11 +1,16 @@
+import sys
+import os
 from selenium import webdriver
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, BASE_DIR)
 
 class Driver:
 
     def browser(self, browser="chrome"):
         if browser == "chrome":
-            self.driver = webdriver.Chrome()
+            driver_path = BASE_DIR + '/webdriver/chromedriver'
+            self.driver = webdriver.Chrome(driver_path)
         elif browser == "firefox":
             self.driver = webdriver.Firefox()
         elif browser == "ie":
@@ -21,4 +26,3 @@ class Driver:
 
     def quit(self):
         self.driver.quit()
-

@@ -119,3 +119,7 @@ class BasePage:
         img_path = '../images/' + new_name
         return self._driver.get_screenshot_as_file(img_path)
 
+    def alert_accept(self):
+        alert = self._driver.switch_to.alert
+        alert.accept()
+
