@@ -1,7 +1,5 @@
-from selenium.webdriver.support.wait import WebDriverWait
-
 from po_study.pages.base_page import BasePage
-from selenium.webdriver.support import expected_conditions as EC
+
 
 class ProfilePage(BasePage):
 

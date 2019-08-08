@@ -1,7 +1,5 @@
 import allure
-import os
 from po_study.pages.manage_tools_page import ManageTools
-from po_study.pages.material_lib_page import MaterialLibPage
 from po_study.tests.driver import Driver
 
 
