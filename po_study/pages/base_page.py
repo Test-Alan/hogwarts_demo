@@ -1,13 +1,11 @@
 import logging
 import time
-from time import sleep
-
-import allure
-from allure_commons.types import AttachmentType
+import os
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
@@ -40,12 +38,14 @@ class BasePage:
             self._driver.get(root_uri + uri)
 
     # 执行js
-    def run_script(self, js=None):
+    def run_script(self, js=None, elm=None):
         if js is None:
             raise ValueError("Please input js script")
         else:
-            self._driver.execute_script(js)
-
+            if elm is None:
+                self._driver.execute_script(js)
+            else:
+                self._driver.execute_script(js, elm)
      # 定位单个元素
     def find_element(self, locator, value, timeout=10):
 
@@ -55,22 +55,21 @@ class BasePage:
             except TypeError:
                 raise ValueError("Type 'timeout' error, must be type int() ")
             try:
-                locator = LOCATOR_LIST[locator]
+                locator = (LOCATOR_LIST[locator], value)
             except KeyError:
                 raise KeyError(
                     "Please use a locator：'id_'、'name'、'class_name'、'css'、'xpath'、'link_text'、'partial_link_text'.")
-            element = WebDriverWait(self._driver, timeout_int).until(
-                EC.presence_of_element_located((locator, value)))
-            if element:
-                return self._driver.find_element(locator, value)
+            WebDriverWait(self._driver, timeout_int).until(
+                EC.presence_of_element_located(locator))
+            return self._driver.find_element(*locator)
 
         except:
             for i in range(timeout_int):
-                element = self._driver.find_element(locator, value)
+                element = self._driver.find_element(*locator)
                 if element.is_displayed() is True:
                     return element
                 else:
-                    sleep(1)
+                    time.sleep(1)
 
             else:
 
@@ -88,14 +87,13 @@ class BasePage:
             except TypeError:
                 raise ValueError("Type 'timeout' error, must be type int() ")
             try:
-                locator = LOCATOR_LIST[locator]
+                locator = (LOCATOR_LIST[locator], value)
             except KeyError:
                 raise KeyError(
                     "Please use a locator：'id_'、'name'、'class_name'、'css'、'xpath'、'link_text'、'partial_link_text'.")
-            element = WebDriverWait(self._driver, timeout_int).until(
-                EC.presence_of_all_elements_located((locator, value)))
-            if element:
-                return self._driver.find_elements(locator, value)
+            WebDriverWait(self._driver, timeout_int).until(
+                EC.presence_of_all_elements_located(locator))
+            return self._driver.find_elements(*locator)
 
         except:
             # 截图
@@ -119,7 +117,43 @@ class BasePage:
         img_path = '../images/' + new_name
         return self._driver.get_screenshot_as_file(img_path)
 
+    # 接受弹框
     def alert_accept(self):
         alert = self._driver.switch_to.alert
         alert.accept()
+
+    # 判断是否包含提示信息
+    def tips_text_in_element(self, locator, value, tips=None):
+        try:
+            try:
+                locator = (LOCATOR_LIST[locator], value)
+            except KeyError:
+                raise KeyError(
+                    "Please use a locator：'id_'、'name'、'class_name'、'css'、'xpath'、'link_text'、'partial_link_text'.")
+            print(locator, tips)
+            WebDriverWait(self._driver, 5, 1).until(
+                EC.presence_of_element_located(locator))
+            tips_text = WebDriverWait(self._driver, 5, 1).until(
+                EC.text_to_be_present_in_element(locator, tips))
+            if tips_text:
+                return tips
+        except:
+            logger.info("timeout, element {} not found!".format(value))
+
+    def invisibility_of_element(self, locator, value, timeout=10):
+        try:
+            try:
+                locator = (LOCATOR_LIST[locator], value)
+            except KeyError:
+                raise KeyError(
+                    "Please use a locator：'id_'、'name'、'class_name'、'css'、'xpath'、'link_text'、'partial_link_text'.")
+            WebDriverWait(self._driver, timeout).until(
+                EC.invisibility_of_element_located(locator))
+        except:
+            logger.info("timeout, element {} not found!".format(value))
+
+    def file_path(self, path):
+        new_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + path
+        new_path = new_path.replace("\\", "/")
+        return new_path
 

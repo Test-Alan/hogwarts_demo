@@ -23,16 +23,18 @@ class ContactPage(BasePage):
     _extern_position_input = ("name", "extern_position")                             # 自定义
     _sendInvite_checkbox = ("name", "sendInvite")                                    # 通过邮件或短信发送企业邀请
     _save_but = ("link_text", "保存")                                                 # 保存按钮
-    _search_input = ("id", "memberSearchInput")
+    _search_input = ("id", "memberSearchInput")                                       # 搜索
+    _tips = ("id", "js_tips")
 
     def click_contact_nav(self):
         self.find_element(*self._contact_nav).click()
-    def add_user(self):
+
+    def add_member(self):
         time.sleep(2)
         self.find_elements(*self._add_member_but)[-1].click()
 
-    def save_user(self, data):
-
+    # 保存用户信息
+    def save_member(self, data):
         if data.get("username"):
             username = self.find_element(*self._username_input)
             username.clear()
@@ -95,19 +97,21 @@ class ContactPage(BasePage):
 
         self.find_element(*self._save_but).click()
 
-    # 保存成功提示
-    def get_tips(self):
-        return self.find_element("id", "js_tips").text
+    # 提示
+    def get_tips(self, tips):
+        return self.tips_text_in_element(*self._tips, tips=tips)
 
     # 搜索
     def search(self, key):
         search_input = self._driver.find_element(*self._search_input)
         search_input.clear()
         search_input.send_keys(key)
+        return ProfilePage(self._driver)
+
     def go_to_search_page(self):
         return ProfilePage(self._driver)
 
-    # 点击管理工具
+    # 管理工具页面
     def go_to_manage_tools_page(self):
         self.find_element("xpath", '//*[@id="menu_manageTools"]/span').click()
         return ManageTools(self._driver)
