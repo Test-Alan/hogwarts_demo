@@ -12,6 +12,11 @@ class TestContact:
         cls.driver = Driver().login()
         cls.contact_page = ContactPage(cls.driver)
         cls.contact_page.click_contact_nav()
+
+    @classmethod
+    def teardown_class(cls):
+        cls.driver.quit()
+
     @pytest.mark.parametrize('data', [
         ({
             "username":  "张三",

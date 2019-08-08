@@ -11,6 +11,10 @@ class TestManageTool:
         cls.manage_page = ManageTools(cls.driver)
         cls.manage_page.click_manage_tools()
 
+    @classmethod
+    def teardown_class(cls):
+        cls.driver.quit()
+
     @allure.story("测试上传图片")
     def test_upload_image(self):
         self.manage_page.click_material_lib()
