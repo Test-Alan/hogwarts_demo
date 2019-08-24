@@ -1,6 +1,6 @@
 import allure
-from po_study.pages.manage_tools_page import ManageTools
-from po_study.tests.driver import Driver
+from po_selenium_test.pages.manage_tools_page import ManageTools
+from po_selenium_test.tests.driver import Driver
 
 
 @allure.feature("第十期_Selenium PO 与企业微信实战_20190804课后作业-上传图片")

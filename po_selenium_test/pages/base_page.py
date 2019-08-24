@@ -46,7 +46,8 @@ class BasePage:
                 self._driver.execute_script(js)
             else:
                 self._driver.execute_script(js, elm)
-     # 定位单个元素
+
+    # 定位单个元素
     def find_element(self, locator, value, timeout=10):
 
         try:
@@ -59,9 +60,10 @@ class BasePage:
             except KeyError:
                 raise KeyError(
                     "Please use a locator：'id_'、'name'、'class_name'、'css'、'xpath'、'link_text'、'partial_link_text'.")
-            WebDriverWait(self._driver, timeout_int).until(
+            element =  WebDriverWait(self._driver, timeout_int).until(
                 EC.presence_of_element_located(locator))
-            return self._driver.find_element(*locator)
+            # return self._driver.find_element(*locator)
+            return element
 
         except:
             for i in range(timeout_int):
@@ -77,7 +79,7 @@ class BasePage:
                 self.screenshot()
                 # 记录日志
                 logger.info("timeout, element {} not found!".format(value))
-
+                return None
     # 定位多个元素
     def find_elements(self, locator, value, timeout=5):
 
@@ -100,7 +102,7 @@ class BasePage:
             self.screenshot()
             # 记录日志
             logger.info("timeout, element {} not found!".format(value))
-
+            return None
     # 点击单选按钮
     def radio_checked(self, radio_name, radio_value):
         try:
@@ -139,7 +141,9 @@ class BasePage:
                 return tips
         except:
             logger.info("timeout, element {} not found!".format(value))
+            return None
 
+    # 判断某个元素中是否不存在于dom树或不可见
     def invisibility_of_element(self, locator, value, timeout=10):
         try:
             try:

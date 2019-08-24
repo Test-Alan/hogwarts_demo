@@ -1,11 +1,11 @@
 from selenium import webdriver
-from po_study.pages.base_page import BasePage
+from po_selenium_test.pages.base_page import BasePage
 
 class Driver:
 
     def __init__(self, browser="chrome"):
         if browser == "chrome":
-            self.driver = webdriver.Chrome()
+            self.driver = webdriver.Chrome("/usr/local/Cellar/python/3.7.3/bin/chromedriver")
         elif browser == "firefox":
             self.driver = webdriver.Firefox()
         elif browser == "ie":
@@ -15,6 +15,7 @@ class Driver:
         else:
             raise ValueError("browser parameter error")
         # 最大窗口
+
         self.driver.maximize_window()
         self.driver.implicitly_wait(5)
 

@@ -1,5 +1,5 @@
-from po_study.pages.base_page import BasePage
-from po_study.pages.material_lib_page import MaterialLibPage
+from po_selenium_test.pages.base_page import BasePage
+from po_selenium_test.pages.material_lib_page import MaterialLibPage
 
 
 class ManageTools(BasePage):

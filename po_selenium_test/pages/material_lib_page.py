@@ -1,4 +1,4 @@
-from po_study.pages.base_page import BasePage
+from po_selenium_test.pages.base_page import BasePage
 
 
 class MaterialLibPage(BasePage):

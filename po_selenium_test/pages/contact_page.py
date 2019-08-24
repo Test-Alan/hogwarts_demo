@@ -1,8 +1,8 @@
 import time
 
-from po_study.pages.base_page import BasePage
-from po_study.pages.manage_tools_page import ManageTools
-from po_study.pages.profile_page import ProfilePage
+from po_selenium_test.pages.base_page import BasePage
+from po_selenium_test.pages.manage_tools_page import ManageTools
+from po_selenium_test.pages.profile_page import ProfilePage
 
 
 class ContactPage(BasePage):
@@ -25,6 +25,7 @@ class ContactPage(BasePage):
     _save_but = ("link_text", "保存")                                                 # 保存按钮
     _search_input = ("id", "memberSearchInput")                                       # 搜索
     _tips = ("id", "js_tips")
+    _search_list = ("css", ".ww_searchResult_title_peopleName")
 
     def click_contact_nav(self):
         self.find_element(*self._contact_nav).click()
@@ -103,10 +104,18 @@ class ContactPage(BasePage):
 
     # 搜索
     def search(self, key):
-        search_input = self._driver.find_element(*self._search_input)
-        search_input.clear()
-        search_input.send_keys(key)
-        return ProfilePage(self._driver)
+
+        for i in range(5):
+            search_input = self._driver.find_element(*self._search_input)
+            search_input.clear()
+            search_input.send_keys(key)
+            re = self.find_element(*self._search_list).text
+            if re:
+                time.sleep(2)
+                return ProfilePage(self._driver)
+
+        else:
+            return ProfilePage(self._driver)
 
     def go_to_search_page(self):
         return ProfilePage(self._driver)
