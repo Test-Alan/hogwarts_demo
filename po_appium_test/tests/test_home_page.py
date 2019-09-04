@@ -13,7 +13,6 @@ class TestSearch:
     def setup_class(cls):
         cls.driver = driver()
         cls.home_page = HomePage(cls.driver)
-        cls.home_page.cancel_update()
     # 结束
     @classmethod
     def teardown_class(cls):
